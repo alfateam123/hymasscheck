@@ -12,7 +12,6 @@
     (fn [self]
         (self.assertEqual (crc.padded_hex 0x1AC) "000001AC")))
 
-
 ;;(-> (dir TestPaddedHex) (print))
 
 (if (= __name__ "__main__")

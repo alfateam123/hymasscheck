@@ -8,11 +8,12 @@
 (.add_argument parser "folder")
 
 (defn padded_hex [dec_crc32]
-    (.upper (.rjust (.replace (hex dec_crc32) "0x" "") 8 "0"))
+;;    (.upper (.rjust (.replace (hex dec_crc32) "0x" "") 8 "0"))
+    (-> (hex dec_crc32) (.replace "0x" "") (.rjust 8 "0") (.upper))
 )
 
 (defn crc32_from_filename [fname]
-    (setv x (first (re.findall "\[([0-9A-Z]{8})\]" fname)))
+    (nth (re.findall "\[([0-9A-Z]{8})\]" fname) 0)
 )
 
 (defn main [args]
