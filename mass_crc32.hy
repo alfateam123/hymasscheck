@@ -2,12 +2,17 @@
 (import binascii)
 (import argparse)
 (import io)
+(import re)
 
 (setv parser (.ArgumentParser argparse))
 (.add_argument parser "folder")
 
 (defn padded_hex [dec_crc32]
-    (.rjust (.replace (hex dec_crc32) "0x" "") 8 "0") 
+    (.upper (.rjust (.replace (hex dec_crc32) "0x" "") 8 "0"))
+)
+
+(defn crc32_from_filename [fname]
+    (setv x (first (re.findall "\[([0-9A-Z]{8})\]" fname)))
 )
 
 (defn main [args]
@@ -20,8 +25,12 @@
         (for [filename full_fnames_]
             (with [[f (open filename "rb")]]
                 ;;(setv buffer (.read f))
+                (setv crc32_inside (crc32_from_filename filename))
+                ;;(print (.format "DEBUG: inside {}" crc32_inside))
                 (setv crc32_hash (binascii.crc32 (.read f)))
-                (print (.format "crc32: {} => {}" filename (padded_hex crc32_hash)))
+                (setv calculated_hash (padded_hex crc32_hash))
+                (setv is_correct (if (= calculated_hash crc32_inside) "OK" "FAIL"))
+                (print (.format "crc32: {} => {} ({})" filename calculated_hash is_correct))
             )
         )
     )
