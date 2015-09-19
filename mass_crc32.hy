@@ -41,5 +41,5 @@
       (setv args (.parse_args parser))
       (main args)
     )
-    (print "bro pls")  
+    nil  
 )
